@@ -35,6 +35,11 @@ namespace NuGet.Frameworks
         IEnumerable<FrameworkSpecificMapping> ProfileShortNames { get; }
 
         /// <summary>
+        /// Ex: iOS &#8210;&gt; ios
+        /// </summary>
+        IEnumerable<KeyValuePair<string, string>> PlatformShortNames { get; }
+
+        /// <summary>
         /// Equal frameworks. Used for legacy conversions.
         /// ex: Framework: Win8 &lt;&#8210;&gt; Framework: NetCore45 Platform: Win8
         /// </summary>
@@ -60,8 +65,8 @@ namespace NuGet.Frameworks
         IEnumerable<OneWayCompatibilityMappingEntry> CompatibilityMappings { get; }
 
         /// <summary>
-        /// Ordered list of framework identifiers. The first framework in the list will be preferred over other 
-        /// framework identifiers. This is enable better tie breaking in scenarios where legacy frameworks are 
+        /// Ordered list of framework identifiers. The first framework in the list will be preferred over other
+        /// framework identifiers. This is enable better tie breaking in scenarios where legacy frameworks are
         /// equivalently compatible to a new framework.
         /// Example: UAP10.0 &#8210;&gt; win81, wpa81
         /// </summary>

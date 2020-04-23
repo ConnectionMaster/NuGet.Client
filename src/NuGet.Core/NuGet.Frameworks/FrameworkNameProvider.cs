@@ -29,7 +29,8 @@ namespace NuGet.Frameworks
         private readonly Dictionary<string, string> _profilesToShortName;
         private readonly Dictionary<string, string> _identifierShortToLong;
         private readonly Dictionary<string, string> _profileShortToLong;
-
+        private readonly Dictionary<string, string> _platformToShortName;
+        private readonly Dictionary<string, string> _platformShortToLong;
         // profile -> supported frameworks, optional frameworks
         private readonly Dictionary<int, HashSet<NuGetFramework>> _portableFrameworks;
         private readonly Dictionary<int, HashSet<NuGetFramework>> _portableOptionalFrameworks;
@@ -73,6 +74,8 @@ namespace NuGet.Frameworks
             _profilesToShortName = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             _identifierShortToLong = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             _profileShortToLong = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            _platformToShortName = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            _platformShortToLong = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             _portableFrameworks = new Dictionary<int, HashSet<NuGetFramework>>();
             _portableOptionalFrameworks = new Dictionary<int, HashSet<NuGetFramework>>();
             _equivalentFrameworks = new Dictionary<NuGetFramework, HashSet<NuGetFramework>>();
@@ -124,6 +127,11 @@ namespace NuGet.Frameworks
             return TryConvertOrNormalize(profileShortName, _profileShortToLong, _profilesToShortName, out profile);
         }
 
+        public bool TryGetPlatform(string platformShortName, out string platformIdentifier)
+        {
+            return TryConvertOrNormalize(platformShortName, _platformShortToLong, _platformToShortName, out platformIdentifier);
+        }
+
         public bool TryGetShortIdentifier(string identifier, out string identifierShortName)
         {
             return TryConvertOrNormalize(identifier, _identifierToShortName, _identifierShortToLong, out identifierShortName);
@@ -132,6 +140,11 @@ namespace NuGet.Frameworks
         public bool TryGetShortProfile(string frameworkIdentifier, string profile, out string profileShortName)
         {
             return TryConvertOrNormalize(profile, _profilesToShortName, _profileShortToLong, out profileShortName);
+        }
+
+        public bool TryGetShortPlatform(string platformIdentifier, out string platformShortName)
+        {
+            return TryConvertOrNormalize(platformIdentifier, _platformToShortName, _platformShortToLong, out platformShortName);
         }
 
         public bool TryGetVersion(string versionString, out Version version)
@@ -171,8 +184,8 @@ namespace NuGet.Frameworks
         {
             var versionString = string.Empty;
 
-            if (version != null 
-                && (version.Major > 0 
+            if (version != null
+                && (version.Major > 0
                     || version.Minor > 0
                     || version.Build > 0
                     || version.Revision > 0))
@@ -194,8 +207,9 @@ namespace NuGet.Frameworks
                     versionParts.Pop();
                 }
 
-                // Always use decimals and 2+ digits for dotnet, netstandard, netstandardapp,
-                // netcoreapp, or if any parts of the version are over 9 we need to use decimals
+                // Always use decimals and 2+ digits for netstandard and
+                // netcoreapp, or if any parts of the version are over 9
+                // we need to use decimals
                 if (string.Equals(
                         framework,
                         FrameworkConstants.FrameworkIdentifiers.NetCoreApp,
@@ -301,7 +315,7 @@ namespace NuGet.Frameworks
                 {
                     result.Add(framework);
 
-                    // Add in the existing framework (included here) and all equivalent frameworks  
+                    // Add in the existing framework (included here) and all equivalent frameworks
                     var equivalentFrameworks = GetAllEquivalentFrameworks(framework);
 
                     UnionWith(existingFrameworks, equivalentFrameworks);
@@ -311,13 +325,13 @@ namespace NuGet.Frameworks
             return result;
         }
 
-        /// <summary>  
-        /// Get all equivalent frameworks including the given framework  
-        /// </summary>  
+        /// <summary>
+        /// Get all equivalent frameworks including the given framework
+        /// </summary>
         private HashSet<NuGetFramework> GetAllEquivalentFrameworks(NuGetFramework framework)
         {
-            // Loop through the frameworks, all frameworks that are not in results yet   
-            // will be added to toProcess to get the equivalent frameworks  
+            // Loop through the frameworks, all frameworks that are not in results yet
+            // will be added to toProcess to get the equivalent frameworks
             var toProcess = new Stack<NuGetFramework>();
             var results = new HashSet<NuGetFramework>();
 
@@ -614,6 +628,9 @@ namespace NuGet.Frameworks
                     // official profile short names
                     AddProfileShortNames(mapping.ProfileShortNames);
 
+                    // official platform short names
+                    AddPlatformShortNames(mapping.PlatformShortNames);
+
                     // add compatiblity mappings
                     AddCompatibilityMappings(mapping.CompatibilityMappings);
 
@@ -802,7 +819,7 @@ namespace NuGet.Frameworks
                             foreach (var framework in eqFrameworks)
                             {
                                 remaining.Push(framework);
-                            }   
+                            }
                         }
                     }
 
@@ -865,6 +882,18 @@ namespace NuGet.Frameworks
                 {
                     _profilesToShortName.Add(profileMapping.Mapping.Value, profileMapping.Mapping.Key);
                     _profileShortToLong.Add(profileMapping.Mapping.Key, profileMapping.Mapping.Value);
+                }
+            }
+        }
+
+        private void AddPlatformShortNames(IEnumerable<KeyValuePair<string, string>> mappings)
+        {
+            if (mappings != null)
+            {
+                foreach (var platformMapping in mappings)
+                {
+                    _platformToShortName.Add(platformMapping.Key, platformMapping.Value);
+                    _platformShortToLong.Add(platformMapping.Value, platformMapping.Key);
                 }
             }
         }

@@ -35,11 +35,17 @@ namespace NuGet.Frameworks
         }
 
         /// <summary>
-        /// Allowed list of profiles in Net5.0ERA
+        /// Allowed list of platforms in Net5.0 Era
         /// </summary>
-        internal static HashSet<string> FrameworkProfiles
-            = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                { };
+        internal static class FrameworkPlatformIdentifiers
+        {
+            public const string Android = "Android";
+            public const string IOS = "iOS";
+            public const string MacOS = "macOS";
+            public const string TvOS = "tvOS";
+            public const string WatchOS = "watchOS";
+            public const string Windows = "Windows";
+        };
 
         public static class FrameworkIdentifiers
         {
