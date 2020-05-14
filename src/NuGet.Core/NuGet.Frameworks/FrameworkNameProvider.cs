@@ -127,9 +127,17 @@ namespace NuGet.Frameworks
             return TryConvertOrNormalize(profileShortName, _profileShortToLong, _profilesToShortName, out profile);
         }
 
-        public bool TryGetPlatform(string platformShortName, out string platformIdentifier)
+        public bool TryGetPlatform(string frameworkIdentifier, Version frameworkVersion, string platformShortName, out string platformIdentifier)
         {
-            return TryConvertOrNormalize(platformShortName, _platformShortToLong, _platformToShortName, out platformIdentifier);
+            if (StringComparer.OrdinalIgnoreCase.Equals(frameworkIdentifier, FrameworkConstants.FrameworkIdentifiers.NetCoreApp) && frameworkVersion.Major >= 5)
+            {
+                return TryConvertOrNormalize(platformShortName, _platformShortToLong, _platformToShortName, out platformIdentifier);
+            }
+            else
+            {
+                platformIdentifier = null;
+                return false;
+            }
         }
 
         public bool TryGetShortIdentifier(string identifier, out string identifierShortName)
@@ -142,9 +150,17 @@ namespace NuGet.Frameworks
             return TryConvertOrNormalize(profile, _profilesToShortName, _profileShortToLong, out profileShortName);
         }
 
-        public bool TryGetShortPlatform(string platformIdentifier, out string platformShortName)
+        public bool TryGetShortPlatform(string frameworkIdentifier, Version frameworkVersion, string platformIdentifier, out string platformShortName)
         {
-            return TryConvertOrNormalize(platformIdentifier, _platformToShortName, _platformShortToLong, out platformShortName);
+            if (StringComparer.OrdinalIgnoreCase.Equals(frameworkIdentifier, FrameworkConstants.FrameworkIdentifiers.NetCoreApp) && frameworkVersion.Major >= 5)
+            {
+                return TryConvertOrNormalize(platformIdentifier, _platformToShortName, _platformShortToLong, out platformShortName);
+            }
+            else
+            {
+                platformShortName = null;
+                return false;
+            }
         }
 
         public bool TryGetVersion(string versionString, out Version version)

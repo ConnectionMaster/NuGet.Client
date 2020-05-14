@@ -289,7 +289,7 @@ namespace NuGet.Frameworks
                 else if (IsNet5Era)
                 {
                     var shortPlatform = string.Empty;
-                    if (!string.IsNullOrEmpty(framework.Platform) && !mappings.TryGetShortPlatform(framework.Platform, out shortPlatform))
+                    if (!string.IsNullOrEmpty(framework.Platform) && !mappings.TryGetShortPlatform(framework.Framework, framework.Version, framework.Platform, out shortPlatform))
                     {
                         shortPlatform = framework.Platform;
                     }
