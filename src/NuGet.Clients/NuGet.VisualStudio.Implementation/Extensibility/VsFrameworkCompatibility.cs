@@ -91,17 +91,7 @@ namespace NuGet.VisualStudio
                 return null;
             }
 
-            try
-            {
-                return new FrameworkName(nearest.DotNetFrameworkName);
-            }
-            catch (System.ArgumentException)
-            {
-                // GetNearest isn't supported for net5-era frameworks, since
-                // their identifiers don't losslessly translate to
-                // `FrameworkName`s.
-                return null;
-            }
+            return new FrameworkName(nearest.DotNetFrameworkName);
         }
     }
 }
