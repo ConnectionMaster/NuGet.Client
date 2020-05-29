@@ -35,11 +35,6 @@ namespace NuGet.Frameworks
         IEnumerable<FrameworkSpecificMapping> ProfileShortNames { get; }
 
         /// <summary>
-        /// Ex: iOS &#8210;&gt; ios
-        /// </summary>
-        IEnumerable<KeyValuePair<string, string>> PlatformShortNames { get; }
-
-        /// <summary>
         /// Equal frameworks. Used for legacy conversions.
         /// ex: Framework: Win8 &lt;&#8210;&gt; Framework: NetCore45 Platform: Win8
         /// </summary>

@@ -214,20 +214,19 @@ namespace NuGet.Frameworks
                                 if (!string.IsNullOrEmpty(profileShort))
                                 {
                                     // Find a platform version if it exists and yank it out
-                                    var platformChars = profileShort.ToCharArray();
+                                    var platformChars = profileShort;
                                     var versionStart = 0;
                                     while (versionStart < platformChars.Length
                                            && IsLetterOrDot(platformChars[versionStart]))
                                     {
                                         versionStart++;
                                     }
-                                    string platformString = versionStart > 0 ? profileShort.Substring(0, versionStart) : profileShort;
+                                    string platform = versionStart > 0 ? profileShort.Substring(0, versionStart) : profileShort;
                                     string platformVersionString = versionStart > 0 ? profileShort.Substring(versionStart, profileShort.Length - versionStart) : null;
 
-                                    string platform = string.Empty;
                                     // Parse the version if it's there.
                                     Version platformVersion = FrameworkConstants.EmptyVersion;
-                                    if ((string.IsNullOrEmpty(platformVersionString) || mappings.TryGetVersion(platformVersionString, out platformVersion)) && mappings.TryGetPlatform(framework, version, platformString, out platform))
+                                    if ((string.IsNullOrEmpty(platformVersionString) || mappings.TryGetVersion(platformVersionString, out platformVersion)))
                                     {
                                         result = new NuGetFramework(framework, version, platform ?? string.Empty, platformVersion ?? FrameworkConstants.EmptyVersion);
                                     }

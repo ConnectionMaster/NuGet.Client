@@ -288,16 +288,16 @@ namespace NuGet.Frameworks
                 }
                 else if (IsNet5Era)
                 {
-                    var shortPlatform = string.Empty;
-                    if (!string.IsNullOrEmpty(framework.Platform) && !mappings.TryGetShortPlatform(framework.Framework, framework.Version, framework.Platform, out shortPlatform))
+                    var platform = string.Empty;
+                    if (!string.IsNullOrEmpty(framework.Platform) && !mappings.TryGetPlatform(framework.Framework, framework.Version, framework.Platform, out platform))
                     {
-                        shortPlatform = framework.Platform;
+                        platform = framework.Platform;
                     }
 
-                    if (!string.IsNullOrEmpty(shortPlatform))
+                    if (!string.IsNullOrEmpty(platform))
                     {
                         sb.Append("-");
-                        sb.Append(shortPlatform);
+                        sb.Append(platform);
 
                         if (framework.PlatformVersion != FrameworkConstants.EmptyVersion)
                         {

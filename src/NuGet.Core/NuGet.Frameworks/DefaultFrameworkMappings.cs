@@ -115,27 +115,6 @@ namespace NuGet.Frameworks
             }
         }
 
-        private static readonly Lazy<KeyValuePair<string, string>[]> PlatformShortNamesLazy = new Lazy<KeyValuePair<string, string>[]>(() =>
-        {
-            return new[]
-            {
-                new KeyValuePair<string, string>(FrameworkConstants.FrameworkPlatformIdentifiers.Android, "android"),
-                new KeyValuePair<string, string>(FrameworkConstants.FrameworkPlatformIdentifiers.IOS, "ios"),
-                new KeyValuePair<string, string>(FrameworkConstants.FrameworkPlatformIdentifiers.MacOS, "macos"),
-                new KeyValuePair<string, string>(FrameworkConstants.FrameworkPlatformIdentifiers.TvOS, "tvos"),
-                new KeyValuePair<string, string>(FrameworkConstants.FrameworkPlatformIdentifiers.WatchOS, "watchos"),
-                new KeyValuePair<string, string>(FrameworkConstants.FrameworkPlatformIdentifiers.Windows, "windows"),
-            };
-        });
-
-        public IEnumerable<KeyValuePair<string, string>> PlatformShortNames
-        {
-            get
-            {
-                return PlatformShortNamesLazy.Value;
-            }
-        }
-
         private static readonly Lazy<KeyValuePair<NuGetFramework, NuGetFramework>[]> EquivalentFrameworksLazy = new Lazy<KeyValuePair<NuGetFramework, NuGetFramework>[]>(() =>
         {
             return new[]

@@ -88,8 +88,10 @@ namespace NuGet.Test
         [InlineData("net5.0-tvos", "net5.0-watchos", false)]
         [InlineData("net5.0-watchos", "net5.0-windows", false)]
 
-        // net5.0 profile names cannot be made up. they will not be compat with anything. profile name will be changed to "Unsupported".
-        [InlineData("net5.0-madeupname", "net5.0", false)]
+        // Unknown net5.0 platform names will be treated as valid so long as their version is valid
+        [InlineData("net5.0-madeupname", "net5.0", true)]
+        [InlineData("net5.0-madeupname12.0", "net5.0", true)]
+        [InlineData("net5.0-madeupname1.1.3.4.5.6", "net5.0", false)]
         [InlineData("net5.0", "net5.0-madeupname", false)]
 
         // dotnet

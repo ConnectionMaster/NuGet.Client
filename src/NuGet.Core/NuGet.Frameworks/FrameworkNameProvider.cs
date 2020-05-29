@@ -127,19 +127,6 @@ namespace NuGet.Frameworks
             return TryConvertOrNormalize(profileShortName, _profileShortToLong, _profilesToShortName, out profile);
         }
 
-        public bool TryGetPlatform(string frameworkIdentifier, Version frameworkVersion, string platformShortName, out string platformIdentifier)
-        {
-            if (StringComparer.OrdinalIgnoreCase.Equals(frameworkIdentifier, FrameworkConstants.FrameworkIdentifiers.NetCoreApp) && frameworkVersion.Major >= 5)
-            {
-                return TryConvertOrNormalize(platformShortName, _platformShortToLong, _platformToShortName, out platformIdentifier);
-            }
-            else
-            {
-                platformIdentifier = null;
-                return false;
-            }
-        }
-
         public bool TryGetShortIdentifier(string identifier, out string identifierShortName)
         {
             return TryConvertOrNormalize(identifier, _identifierToShortName, _identifierShortToLong, out identifierShortName);
@@ -150,11 +137,12 @@ namespace NuGet.Frameworks
             return TryConvertOrNormalize(profile, _profilesToShortName, _profileShortToLong, out profileShortName);
         }
 
-        public bool TryGetShortPlatform(string frameworkIdentifier, Version frameworkVersion, string platformIdentifier, out string platformShortName)
+        public bool TryGetPlatform(string frameworkIdentifier, Version frameworkVersion, string platformIdentifier, out string platformShortName)
         {
             if (StringComparer.OrdinalIgnoreCase.Equals(frameworkIdentifier, FrameworkConstants.FrameworkIdentifiers.NetCoreApp) && frameworkVersion.Major >= 5)
             {
-                return TryConvertOrNormalize(platformIdentifier, _platformToShortName, _platformShortToLong, out platformShortName);
+                platformShortName = platformIdentifier;
+                return true;
             }
             else
             {
@@ -644,9 +632,6 @@ namespace NuGet.Frameworks
                     // official profile short names
                     AddProfileShortNames(mapping.ProfileShortNames);
 
-                    // official platform short names
-                    AddPlatformShortNames(mapping.PlatformShortNames);
-
                     // add compatiblity mappings
                     AddCompatibilityMappings(mapping.CompatibilityMappings);
 
@@ -898,18 +883,6 @@ namespace NuGet.Frameworks
                 {
                     _profilesToShortName.Add(profileMapping.Mapping.Value, profileMapping.Mapping.Key);
                     _profileShortToLong.Add(profileMapping.Mapping.Key, profileMapping.Mapping.Value);
-                }
-            }
-        }
-
-        private void AddPlatformShortNames(IEnumerable<KeyValuePair<string, string>> mappings)
-        {
-            if (mappings != null)
-            {
-                foreach (var platformMapping in mappings)
-                {
-                    _platformToShortName.Add(platformMapping.Key, platformMapping.Value);
-                    _platformShortToLong.Add(platformMapping.Value, platformMapping.Key);
                 }
             }
         }
