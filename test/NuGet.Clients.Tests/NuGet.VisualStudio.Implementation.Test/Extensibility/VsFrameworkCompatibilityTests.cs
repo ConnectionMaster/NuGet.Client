@@ -66,10 +66,8 @@ namespace NuGet.VisualStudio.Implementation.Test.Extensibility
             };
 
             // Act
-            var actual = target.GetNearest(targetFramework, frameworks);
+            Assert.Throws<System.ArgumentException>(() => target.GetNearest(targetFramework, frameworks));
 
-            // Assert
-            Assert.Null(actual);
         }
 
         [Fact]
